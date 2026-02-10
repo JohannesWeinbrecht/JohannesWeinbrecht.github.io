@@ -1,0 +1,33 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Contact</h1>
+            <p>
+                Although I am currently pretty bussy, I am always open for somebody reaching to me.
+                Below you'll find some information on how to reach me best.
+            </p>
+			<h2>Socials</h2>
+            <p>
+                Currently you can only find me publically on <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/johannes-weinbrecht/">LinkedIn</a> and <a target="_blank" rel="noopener noreferrer" href="https://github.com/JohannesWeinbrecht">Github</a>.
+            </p>
+			<h2>Availability</h2>
+            <p>
+                Below you can find my public facing calender. When sending appointment requests to my mail address, please check if I am available first.
+            </p>
+			<iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Europe%2FBerlin&title=Johannes%20Weinbrecht%20Public&hl=en&mode=WEEK&src=bGlrZWFsbHRoZW90aGVyZ3V5c0BnbWFpbC5jb20&src=N2FjODZlMGM3MTQ4MTVjNjdkY2VkOTAxMjM5MzEzYzU1MGQxZGMwM2Q2MjU0NTM4ZWFhMDZkNzQ1NTNmZTJkNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZWYwMDVlOGNjZjVhYmE3MzA4M2ZkYzcyOGI2MDNhZDdkMDUxMzJmYzcyOWIyMDE2MWM1OGFjMWIxMzhmMjhiYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=NGZmY2E2OWY4NDcwY2EzMTQ4NTA2YWY0YmQ1Y2QwZjA1ZTA0ZjcyY2NiNTU5ZDI3MWM3NGI1OTRiZTNlMmQ0ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=b29lZWtyazg5MWpoYWhiZTc1aXVxbXM4Z21wMWlsMDRAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%238e24aa&color=%237cb342&color=%23ad1457&color=%23616161&color=%23f4511e" style="border:solid 1px #777" width="1000" height="800" frameborder="0" scrolling="no"></iframe>
+		</main>
+		<Footer />
+	</body>
+</html>
