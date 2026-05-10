@@ -1,5 +1,6 @@
 ---
 import { SITE_TITLE } from '../consts';
+import ThemeIcon from './ThemeIcon.astro';
 import HeaderLink from './HeaderLink.astro';
 ---
 
@@ -13,6 +14,7 @@ import HeaderLink from './HeaderLink.astro';
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
 		<div class="social-links">
+			<ThemeIcon />
 			<a href="https://www.linkedin.com/in/johannes-weinbrecht/" target="_blank">
 				<span class="sr-only">Follow Astro on linkedin</span>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true", width="32", height="32"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
@@ -38,7 +40,6 @@ import HeaderLink from './HeaderLink.astro';
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
 	}
 	nav {
