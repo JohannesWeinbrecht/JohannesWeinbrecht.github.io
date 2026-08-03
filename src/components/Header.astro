@@ -3,7 +3,13 @@ import { SITE_TITLE } from '../consts';
 import ThemeIcon from './ThemeIcon.astro';
 import HeaderLink from './HeaderLink.astro';
 ---
-
+<script is:inline>
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    const theme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.style.colorScheme = theme;
+  })();
+</script>
 <header>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>

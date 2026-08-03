@@ -32,6 +32,7 @@
   const updateUI = (theme) => {
     // 1. color-scheme am Root setzen (für Browser-Elemente)
     root.style.colorScheme = theme;
+    localStorage.setItem('theme', theme);
 
     // 2. SVG Pfade direkt manipulieren
     if (theme === 'dark') {
