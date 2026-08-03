@@ -4,6 +4,10 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+html {
+	min-height: 100vh;
+}
+
 :root {
 	color-scheme: light dark;
 
@@ -19,18 +23,21 @@
 		rgba(var(--gray), 33%);
 	
 
-	--background-primary: light-dark(#f8f8f8, #101010);
+	--background-primary: light-dark(#f8f8f8, #303030);
 	--background-secondary: light-dark(#ffffff, #000000);
 	--background: light-dark(#ffffff, #000000);
 	--font-secondary: light-dark(#000000, #ffffff);
 
 	--accent: light-dark(#9c23ff,#ac39cf);
 	--accent-dark: light-dark(#8a008a,#c123ff);
-
+	
+	/*
 	--light-gradient: linear-gradient(to bottom, var(--background-primary), var(--background-secondary));
 	--dark-gradient: linear-gradient(to bottom, var(--background-primary), var(--background-secondary));
 
 	--gradient: light-dark(var(--light-gradient), var(--dark-gradient));
+	*/
+	--gradient: linear-gradient(to bottom, var(--background-primary), var(--background-secondary));
 
 	--background-gradient: light-dark(var(--light-gradient), var(--dark-gardient));
 }
