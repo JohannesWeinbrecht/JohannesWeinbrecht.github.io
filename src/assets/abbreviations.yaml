@@ -1,0 +1,32 @@
+# entry:
+# all keys are strings
+# 
+# - key: sleek
+#   short: sleek
+#   long: 
+#   explanation: A style sheet language used to describe the presentation and layout of a document written in HTML.
+#   sources: 
+#     - "https://www.merriam-webster.com/dictionary/sleek"
+
+- key: imo
+  short: imo
+  long: in my opinion
+
+- key: imho
+  short: imho
+  long: in my humble opinion
+
+- key: mmn
+  short: mMn
+  long: meiner Meinung nach
+
+- key: sleek
+  short: sleek
+  long: 
+  explanation: A style sheet language used to describe the presentation and layout of a document written in HTML.
+  sources: 
+    - "https://www.merriam-webster.com/dictionary/sleek"
+
+- key: gl
+  short: gl
+  long: good luck

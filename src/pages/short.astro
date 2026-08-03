@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/DefaultPage.astro';
+import * as fs from 'fs';
+import * as path from 'path';
+import { parse } from 'yaml';
+import Abbreviation, { type Abbrev } from '../components/short/Abbreviation.astro';
+
+
+function loadAbbrevs(filePath: string): Abbrev[] {
+  const fileContent = fs.readFileSync(filePath, 'utf8');
+
+  const abbrevs: Abbrev[] = parse(fileContent);
+
+  return abbrevs;
+}
+
+const yamlPath = path.resolve(process.cwd(), 'src/assets/abbreviations.yaml');
+const abbreviations = loadAbbrevs(yamlPath);
+---
+
+<Layout>
+  <h1>
+    Abbreviations <em>(shorts)</em>
+  </h1>
+
+  <section class="abbreviations-list">
+    {abbreviations.map((item) => (
+      <Abbreviation {...item} />
+    ))}
+  </section>
+</Layout>

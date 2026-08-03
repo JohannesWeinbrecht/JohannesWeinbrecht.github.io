@@ -1,0 +1,118 @@
+---
+export interface Abbrev {
+  key: string;
+  short: string;
+  long?: string;
+  explanation: string;
+  sources?: string[];
+}
+
+type Props = Abbrev;
+
+const { key: abbrevKey, short, long, explanation, sources } = Astro.props;
+
+const hasLong = long && long.trim().toLowerCase() !== 'none';
+const hasSources = sources && sources.length > 0;
+---
+
+<div id={abbrevKey} class="abbrev-card">
+  <h3>
+    <a href={`#${abbrevKey}`} class="abbrev-link">{short}</a>
+    {hasLong && <span class="abbrev-long">— {long}</span>}
+  </h3>
+  
+  <p class="abbrev-explanation">{explanation}</p>
+
+  {hasSources && (
+    <p class="abbrev-sources">
+      <span class="sources-label">Sources:</span>
+      <span class="sources-list">
+        {sources.map((source, index) => {
+          const isUrl = source.startsWith('http://') || source.startsWith('https://');
+          const num = index + 1;
+
+          return (
+            <span class="source-item">
+              {isUrl ? (
+                <a href={source} target="_blank" rel="noopener noreferrer" title={source}>
+                  [{num}]
+                </a>
+              ) : (
+                <span title={source}>[{source}]</span>
+              )}
+            </span>
+          );
+        })}
+      </span>
+    </p>
+  )}
+</div>
+
+<style>
+  .abbrev-card {
+    margin-block: 1rem;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid currentColor;
+    scroll-margin-top: 2rem;
+  }
+
+  h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.25rem;
+  }
+
+  .abbrev-link {
+    color: inherit;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .abbrev-link:hover {
+    text-decoration: underline;
+  }
+
+  .abbrev-long {
+    font-weight: normal;
+    opacity: 0.8;
+  }
+
+  .abbrev-explanation {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.5;
+  }
+
+  /* Elegant inline citation styling */
+  .abbrev-sources {
+    margin: 0.3rem 0 0 0;
+    font-size: 1rem;
+    opacity: 0.8;
+    display: flex;
+    gap: 0.35rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  .sources-label {
+    font-weight: 500;
+  }
+
+  .sources-list {
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+
+  .source-item a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.05rem 0.2rem;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .source-item a:hover {
+    background-color: color-mix(in srgb, currentColor 12%, transparent);
+    text-decoration: underline;
+  }
+</style>
