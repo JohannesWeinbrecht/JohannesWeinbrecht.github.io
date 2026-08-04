@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/DefaultPage.astro";
+---
+
+<Layout>
+  <h1>Status</h1>
+  <div id="status-output">Lade Daten...</div>
+  <script>
+    import { fetchCalendarOnClient } from "../lib/fetchCalendarData";
+    const data = await fetchCalendarOnClient();
+    const outputElement = document.getElementById("status-output");
+
+    if (outputElement && data){
+
+
+        const capacity_output = document.createElement("div")
+
+        capacity_output.textContent = "Currently my capacity is at " + data.capacity + "%"
+
+        outputElement.textContent=""
+        outputElement.appendChild(capacity_output)
+
+
+    }
+  </script>
+</Layout>
