@@ -3,10 +3,15 @@ import { parse } from "yaml";
 
 export async function fetchCalendarOnClient() {
     const ICAL_URL = 'https://calendar.google.com/calendar/ical/8dc85166f24519f6b0e2225e6f56699aa7d3653ee9c132c301bd30f478605641%40group.calendar.google.com/public/basic.ics';
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(ICAL_URL)}&t=${Date.now()}`;
 
     try {
         // Ruf deine eigene API-Route an, nicht direkt Google (CORS-Bypass)
-        const response = await fetch(ICAL_URL);
+        const response = await fetch(proxyUrl, { cache: "no-store" });
+        if (!response.ok) {
+            console.log("request returned error")
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
         const data = await response.text();
 
         // iCal Daten parsen
