@@ -2,11 +2,14 @@ import ICAL from "ical.js";
 import { parse } from "yaml";
 
 export async function fetchCalendarOnClient() {
-    const ICAL_URL = 'https://calendar.google.com/calendar/ical/8dc85166f24519f6b0e2225e6f56699aa7d3653ee9c132c301bd30f478605641%40group.calendar.google.com/public/basic.ics';
+    const listElement = document.getElementById("event-list")!;
+    const loadingElement = document.getElementById("loading")!;
 
     try {
         // Ruf deine eigene API-Route an, nicht direkt Google (CORS-Bypass)
-        const response = await fetch(ICAL_URL);
+        const response = await fetch("/api/calendarData", {
+            cache: "no-store" // Zwingt den Browser, immer die aktuellsten Daten zu holen
+        });
         const data = await response.text();
 
         // iCal Daten parsen
@@ -56,7 +59,7 @@ export async function fetchCalendarOnClient() {
 
         return calendarData;
     } catch (error) {
-        console.log("Error in Request function")
         console.error(error);
+        loadingElement.textContent = "Fehler beim Laden der Termine.";
     }
 }
