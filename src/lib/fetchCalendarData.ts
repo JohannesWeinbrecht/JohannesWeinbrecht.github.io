@@ -27,9 +27,13 @@ export async function getCalendarData(): Promise<Record<string, any> | null> {
 
             // Nutze die normale JS-Lokalzeit
             const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentMonth = now.getMonth() + 1; // JS-Monate sind 0-basiert
-            const currentDay = now.getDate();
+
+            const berlinTimeStr = now.toLocaleString("en-US", { timeZone: "Europe/Berlin" });
+            const localNow = new Date(berlinTimeStr);
+
+            const currentYear = localNow.getFullYear();
+            const currentMonth = localNow.getMonth() + 1;
+            const currentDay = localNow.getDate();
 
             // Filter auf "Status"-Events für HEUTE
             // 1. Suche nach einem spezifischen Tages-Event für HEUTE (ohne RRULE)
@@ -54,7 +58,7 @@ export async function getCalendarData(): Promise<Record<string, any> | null> {
 
             // 3. Bevorzuge das Tages-Event. Wenn nicht vorhanden, nimm das Serien-Event.
             const informationEvent = specificTodayEvent ?? recurringSeriesEvent;
-            
+
 
             if (!informationEvent?.description) {
                 console.warn("Kein Status-Event für den heutigen Tag gefunden.");
