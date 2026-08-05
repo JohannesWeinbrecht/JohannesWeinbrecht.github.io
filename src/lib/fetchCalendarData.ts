@@ -7,7 +7,9 @@ export async function fetchCalendarOnClient() {
 
     try {
         // Ruf deine eigene API-Route an, nicht direkt Google (CORS-Bypass)
-        const response = await fetch("/api/calendarData");
+        const response = await fetch("/api/calendarData", {
+            cache: "no-store" // Zwingt den Browser, immer die aktuellsten Daten zu holen
+        });
         const data = await response.text();
 
         // iCal Daten parsen
