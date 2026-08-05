@@ -8,8 +8,6 @@ import Layout from "../layouts/DefaultPage.astro";
   <script>
     import { fetchCalendarOnClient } from "../lib/fetchCalendarData";
     const data = await fetchCalendarOnClient();
-    console.log("Received data:")
-    console.log(data)
     const outputElement = document.getElementById("status-output");
 
     if (outputElement && data){
