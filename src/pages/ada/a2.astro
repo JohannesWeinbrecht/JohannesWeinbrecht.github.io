@@ -117,6 +117,7 @@ import "../../styles/global.css";
 				resetBtnId,
 				messageId,
 				defaultScramble,
+				camera_longitude,
 			}) {
 				const playerHost = document.getElementById(playerHostId);
 				const form = document.getElementById(formId);
@@ -142,6 +143,7 @@ import "../../styles/global.css";
 					background: "none",
 					visualization: "Cube3D",
 					hintFacelets: "none",
+					cameraLongitude: camera_longitude,
 				});
 				playerHost.appendChild(player);
 
@@ -239,6 +241,7 @@ import "../../styles/global.css";
 				messageId: "message",
 				defaultScramble:
 					"U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U R'",
+				camera_longitude: "30",
 			});
 
 			initExplorer({
@@ -250,6 +253,7 @@ import "../../styles/global.css";
 				messageId: "message-2",
 				defaultScramble:
 					"U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 D' F",
+				camera_longitude: "-30",
 			});
 		</script>
 
@@ -287,7 +291,8 @@ import "../../styles/global.css";
 				gap: 0.5rem;
 			}
 
-			#mutation-input {
+			#mutation-input,
+			#mutation-input-2 {
 				flex: 1 1 15rem;
 				font-family: "Atkinson", ui-monospace, SFMono-Regular, Menlo, Consolas,
 					monospace;
@@ -300,7 +305,8 @@ import "../../styles/global.css";
 				color: var(--font-secondary);
 			}
 
-			#mutation-input:focus-visible {
+			#mutation-input:focus-visible,
+			#mutation-input-2:focus-visible {
 				outline: 2px solid var(--accent);
 				outline-offset: 1px;
 				border-color: transparent;
