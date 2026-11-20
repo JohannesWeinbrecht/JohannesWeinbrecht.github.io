@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/DefaultPage.astro";
+import CubeExplorer from "../../components/cube/CubeExplorer.astro";
+---
+
+<Layout>
+	<h1>
+		Cube <em>(cubing.js)</em>
+	</h1>
+	<p>
+		This page uses <a href="https://js.cubing.net/cubing/">cubing.js</a> to
+		render a <strong>3×3×3</strong> cube. Use the field above to pick a state
+		to <strong>Reset</strong> to — the solved cube, then that mutation (blank
+		means solved). Type a mutation below and hit <strong>Run</strong> to apply
+		it on top of the current state.
+	</p>
+	<CubeExplorer />
+</Layout>

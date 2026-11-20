@@ -1,0 +1,300 @@
+---
+// Standalone page (no site header/footer) with a cubing.js 3×3×3 viewer,
+// aligned with the behavior of the /ada/cube page (CubeExplorer), except:
+//   * no header/footer (standalone page)
+//   * only one viewer — no "Cross only" toggle or speed slider
+//   * one text field plus Run and Reset buttons
+//   * a fixed default state: solved cube, then the scramble below
+import "../../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/racoon.svg" />
+		<link rel="icon" href="/racoon.ico" />
+		<title>A2 · Cube</title>
+		<meta
+			name="description"
+			content="A cubing.js 3x3x3 viewer with a default scramble, an input for notation, and Run / Reset controls."
+		/>
+	</head>
+	<body>
+		<main>
+			<h1>
+				A2 <em>(cubing.js)</em>
+			</h1>
+			<p>
+				This page uses <a href="https://js.cubing.net/cubing/">cubing.js</a> to
+				render a <strong>3×3×3</strong> cube in a fixed default state (solved
+				cube, then the scramble shown below). Type a notation and hit
+				<strong>Run</strong> to apply it on top of the current state.
+				<strong>Reset</strong> restores the default state.
+			</p>
+
+			<div class="cube-explorer">
+				<div class="player-container">
+					<div id="player-host"></div>
+				</div>
+
+				<form id="mutation-form" class="controls">
+					<label class="sr-only" for="mutation-input">Notation</label>
+					<input
+						id="mutation-input"
+						type="text"
+						placeholder="Enter a notation, e.g. R U R' U'"
+						autocomplete="off"
+						spellcheck="false"
+					/>
+					<button id="run-btn" class="btn primary" type="submit">Run</button>
+				</form>
+
+				<div class="controls">
+					<button id="reset-btn" class="btn" type="button">Reset</button>
+				</div>
+
+				<p id="message" class="message" role="status" aria-live="polite"></p>
+
+				<p class="hint">
+					Default state (solved, then):
+					<code
+						>U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U
+						R'</code
+					>
+					Use standard cube notation: <code>R U R' U'</code>,
+					<code>F2</code>, <code>M</code>, <code>Rw</code>, … Type a move
+					sequence and hit <strong>Run</strong> to apply it on top of the
+					current state. <strong>Reset</strong> restores the default state.
+				</p>
+			</div>
+		</main>
+
+		<script>
+			import { Alg } from "cubing/alg";
+			import { TwistyPlayer } from "cubing/twisty";
+
+			const DEFAULT_SCRAMBLE =
+				"U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U R'";
+
+			const playerHost = document.getElementById("player-host");
+			const form = document.getElementById("mutation-form");
+			const input = document.getElementById("mutation-input");
+			const runBtn = document.getElementById("run-btn");
+			const resetBtn = document.getElementById("reset-btn");
+			const message = document.getElementById("message");
+
+			if (
+				playerHost &&
+				form &&
+				input &&
+				runBtn &&
+				resetBtn &&
+				message
+			) {
+				const player = new TwistyPlayer({
+					puzzle: "3x3x3",
+					alg: "",
+					background: "none",
+					visualization: "Cube3D",
+				});
+				playerHost.appendChild(player);
+
+				let moveCount = 0;
+
+				function setMessage(text, kind = "info") {
+					message.textContent = text;
+					message.dataset.kind = kind;
+				}
+
+				// Set the cube to the default state: the solved cube, then the
+				// scramble. Show the end of the timeline so the scrambled state
+				// is what you see.
+				function resetToDefault() {
+					player.alg = new Alg();
+					player.experimentalSetupAlg = Alg.fromString(DEFAULT_SCRAMBLE);
+					player.timestamp = "end";
+					input.value = "";
+					moveCount = 0;
+					setMessage("Reset to the default state.");
+				}
+
+				function runMutation() {
+					const raw = input.value.trim();
+					if (!raw) {
+						setMessage("Please enter a notation first.", "error");
+						input.focus();
+						return;
+					}
+
+					let alg;
+					try {
+						alg = Alg.fromString(raw);
+					} catch (e) {
+						setMessage(`Could not parse “${raw}”: ${e.message}`, "error");
+						return;
+					}
+
+					const moves = [...alg.experimentalLeafMoves()];
+					if (moves.length === 0) {
+						setMessage(`“${raw}” contains no moves.`, "error");
+						return;
+					}
+
+					try {
+						for (const move of moves) {
+							player.experimentalAddMove(move);
+						}
+					} catch (e) {
+						setMessage(`Could not apply “${raw}”: ${e.message}`, "error");
+						return;
+					}
+
+					moveCount += moves.length;
+					const plural = moves.length === 1 ? "" : "s";
+					setMessage(
+						`Applied ${moves.length} move${plural} (${raw}). Total moves applied: ${moveCount}.`,
+					);
+				}
+
+				form.addEventListener("submit", (e) => {
+					e.preventDefault();
+					runMutation();
+				});
+
+				resetBtn.addEventListener("click", resetToDefault);
+
+				// Start in the default state.
+				resetToDefault();
+
+				// Follow the site's light/dark theme (toggled in the header).
+				// This page is standalone so there is no header toggle, but we
+				// match the cube page's behavior for consistency.
+				function currentTheme() {
+					const explicit = document.documentElement.style.colorScheme;
+					if (explicit === "dark" || explicit === "light") return explicit;
+					return window.matchMedia("(prefers-color-scheme: dark)").matches
+						? "dark"
+						: "light";
+				}
+				player.colorScheme = currentTheme();
+				new MutationObserver(() => {
+					player.colorScheme = currentTheme();
+				}).observe(document.documentElement, {
+					attributes: true,
+					attributeFilter: ["style"],
+				});
+			}
+		</script>
+
+		<style>
+			.cube-explorer {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			.player-container {
+				border-radius: 12px;
+				overflow: hidden;
+				border: 1px solid
+					light-dark(rgba(15, 18, 25, 0.12), rgba(255, 255, 255, 0.14));
+				background: light-dark(#ffffff, #202020);
+			}
+
+			#player-host {
+				width: 100%;
+				height: 420px;
+			}
+
+			#player-host :global(twisty-player) {
+				width: 100%;
+				height: 100%;
+				--twisty-player-background: transparent;
+			}
+
+			.controls {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+
+			#mutation-input {
+				flex: 1 1 15rem;
+				font-family: "Atkinson", ui-monospace, SFMono-Regular, Menlo, Consolas,
+					monospace;
+				font-size: 1rem;
+				padding: 0.55rem 0.75rem;
+				border-radius: 8px;
+				border: 1px solid
+					light-dark(rgba(15, 18, 25, 0.15), rgba(255, 255, 255, 0.2));
+				background: light-dark(#ffffff, #1a1a1a);
+				color: var(--font-secondary);
+			}
+
+			#mutation-input:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 1px;
+				border-color: transparent;
+			}
+
+			.btn {
+				font-family: inherit;
+				font-size: 1rem;
+				padding: 0.55rem 1.25rem;
+				border-radius: 8px;
+				cursor: pointer;
+				border: 1px solid
+					light-dark(rgba(15, 18, 25, 0.15), rgba(255, 255, 255, 0.2));
+				background: transparent;
+				color: var(--font-secondary);
+				transition: background-color 0.15s ease, color 0.15s ease,
+					border-color 0.15s ease;
+			}
+
+			.btn:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+			}
+
+			.btn:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 1px;
+			}
+
+			.btn.primary {
+				background: var(--accent);
+				border-color: var(--accent);
+				color: #ffffff;
+			}
+
+			.btn.primary:hover {
+				background: var(--accent-dark);
+				color: #ffffff;
+			}
+
+			.message {
+				min-height: 1.7em;
+				margin: 0;
+				color: rgb(var(--gray));
+			}
+
+			.message[data-kind="error"] {
+				color: light-dark(#c62828, #ff8a80);
+			}
+
+			.hint {
+				margin: 0;
+				font-size: 0.9em;
+				color: rgb(var(--gray));
+			}
+
+			@media (max-width: 720px) {
+				#player-host {
+					height: 320px;
+				}
+			}
+		</style>
+	</body>
+</html>
