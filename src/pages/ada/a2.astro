@@ -92,7 +92,6 @@ import "../../styles/global.css";
 					alg: "",
 					background: "none",
 					visualization: "Cube3D",
-					// Hide the floating facelet hints so only the plain faces show.
 					hintFacelets: "none",
 				});
 				playerHost.appendChild(player);
@@ -116,7 +115,7 @@ import "../../styles/global.css";
 				function runMutation() {
 					const raw = input.value.trim();
 					if (!raw) {
-						setMessage("Please enter a notation first.", "error");
+						setMessage("Bitte geben sie eine Zugnotation ein.", "error");
 						input.focus();
 						return;
 					}
@@ -125,13 +124,13 @@ import "../../styles/global.css";
 					try {
 						alg = Alg.fromString(raw);
 					} catch (e) {
-						setMessage(`Could not parse “${raw}”: ${e.message}`, "error");
+						setMessage(`Zugnotation konnte nicht gelesen werden “${raw}”: ${e.message}`, "error");
 						return;
 					}
 
 					const moves = [...alg.experimentalLeafMoves()];
 					if (moves.length === 0) {
-						setMessage(`“${raw}” contains no moves.`, "error");
+						setMessage(`“${raw}” enthält keine Züge.`, "error");
 						return;
 					}
 
