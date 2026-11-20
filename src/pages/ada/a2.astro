@@ -11,6 +11,12 @@ import "../../styles/global.css";
 <!doctype html>
 <html lang="en">
 	<head>
+		<!-- Force light mode: tells the browser (and this page's cubing.js
+		     theme logic) that the color scheme is light, so all light-dark()
+		     styles resolve to their light values. -->
+		<script is:inline>
+			document.documentElement.style.colorScheme = "light";
+		</script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/racoon.svg" />
