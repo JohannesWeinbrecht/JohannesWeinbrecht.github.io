@@ -30,15 +30,14 @@ import "../../styles/global.css";
 	<body>
 		<main>
 			<h1>
-				A2 <em>(cubing.js)</em>
+				Aufgabe 2
 			</h1>
 			<p>
-				This page uses <a href="https://js.cubing.net/cubing/">cubing.js</a> to
-				render a <strong>3×3×3</strong> cube in a fixed default state (solved
-				cube, then the scramble shown below). Type a notation and hit
-				<strong>Run</strong> to apply it starting from that default state
-				(any previously run notation is replaced, nothing accumulates).
-				<strong>Reset</strong> restores the default state.
+				Ausgangszustand: 
+					<code
+						>U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U
+						R'</code
+					>
 			</p>
 
 			<div class="cube-explorer">
@@ -51,31 +50,18 @@ import "../../styles/global.css";
 					<input
 						id="mutation-input"
 						type="text"
-						placeholder="Enter a notation, e.g. R U R' U'"
+						placeholder="Zugnotation hier eingeben"
 						autocomplete="off"
 						spellcheck="false"
 					/>
-					<button id="run-btn" class="btn primary" type="submit">Run</button>
+					<button id="run-btn" class="btn primary" type="submit">Ausführen</button>
 				</form>
 
 				<div class="controls">
-					<button id="reset-btn" class="btn" type="button">Reset</button>
+					<button id="reset-btn" class="btn" type="button">Zurücksetzen</button>
 				</div>
 
 				<p id="message" class="message" role="status" aria-live="polite"></p>
-
-				<p class="hint">
-					Default state (solved, then):
-					<code
-						>U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U
-						R'</code
-					>
-					Use standard cube notation: <code>R U R' U'</code>,
-					<code>F2</code>, <code>M</code>, <code>Rw</code>, … Type a move
-					sequence and hit <strong>Run</strong> to apply it from the default
-					state — the previous run is replaced, so nothing is appended.
-					<strong>Reset</strong> restores the default state.
-				</p>
 			</div>
 		</main>
 
@@ -106,6 +92,8 @@ import "../../styles/global.css";
 					alg: "",
 					background: "none",
 					visualization: "Cube3D",
+					// Hide the floating facelet hints so only the plain faces show.
+					hintFacelets: "none",
 				});
 				playerHost.appendChild(player);
 
@@ -122,7 +110,7 @@ import "../../styles/global.css";
 					player.experimentalSetupAlg = Alg.fromString(DEFAULT_SCRAMBLE);
 					player.timestamp = "end";
 					input.value = "";
-					setMessage("Reset to the default state.");
+					setMessage("Zum Ausgangszustand zurücksetzen");
 				}
 
 				function runMutation() {
@@ -150,17 +138,19 @@ import "../../styles/global.css";
 					try {
 						// Replace any previously applied moves: each Run starts
 						// over from the default state (solved + scramble) and
-						// applies exactly the notation in the field. Past Run
-						// contents are not kept, so nothing accumulates.
+						// plays exactly the notation in the field, like the
+						// viewer's play button. Past Run contents are not kept,
+						// so nothing accumulates.
 						player.alg = alg;
-						player.timestamp = "end";
+						player.timestamp = "start";
+						player.play();
 					} catch (e) {
 						setMessage(`Could not apply “${raw}”: ${e.message}`, "error");
 						return;
 					}
 
 					const plural = moves.length === 1 ? "" : "s";
-					setMessage(`Applied ${moves.length} move${plural} (${raw}).`);
+					setMessage(`Running ${moves.length} move${plural} (${raw})…`);
 				}
 
 				form.addEventListener("submit", (e) => {
