@@ -32,6 +32,9 @@ import "../../styles/global.css";
 			<h1>
 				Aufgabe 2
 			</h1>
+			<h2>
+				Zustand 1
+			</h2>
 			<p>
 				Ausgangszustand: 
 					<code
@@ -63,30 +66,76 @@ import "../../styles/global.css";
 
 				<p id="message" class="message" role="status" aria-live="polite"></p>
 			</div>
+			<h2>
+				Zustand 2
+			</h2>
+			<p>
+				Ausgangszustand: 
+					<code
+						>U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 D'
+						F</code
+					>
+			</p>
+
+			<div class="cube-explorer">
+				<div class="player-container">
+					<div id="player-host-2"></div>
+				</div>
+
+				<form id="mutation-form-2" class="controls">
+					<label class="sr-only" for="mutation-input-2">Notation</label>
+					<input
+						id="mutation-input-2"
+						type="text"
+						placeholder="Zugnotation hier eingeben"
+						autocomplete="off"
+						spellcheck="false"
+					/>
+					<button id="run-btn-2" class="btn primary" type="submit">Ausführen</button>
+				</form>
+
+				<div class="controls">
+					<button id="reset-btn-2" class="btn" type="button">Zurücksetzen</button>
+				</div>
+
+				<p id="message-2" class="message" role="status" aria-live="polite"></p>
+			</div>
 		</main>
 
 		<script>
 			import { Alg } from "cubing/alg";
 			import { TwistyPlayer } from "cubing/twisty";
 
-			const DEFAULT_SCRAMBLE =
-				"U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U R'";
+			// Set up one cube explorer (viewer + notation input + Run/Reset).
+			// Each instance starts from its own default state: the solved cube,
+			// then its scramble.
+			function initExplorer({
+				playerHostId,
+				formId,
+				inputId,
+				runBtnId,
+				resetBtnId,
+				messageId,
+				defaultScramble,
+			}) {
+				const playerHost = document.getElementById(playerHostId);
+				const form = document.getElementById(formId);
+				const input = document.getElementById(inputId);
+				const runBtn = document.getElementById(runBtnId);
+				const resetBtn = document.getElementById(resetBtnId);
+				const message = document.getElementById(messageId);
 
-			const playerHost = document.getElementById("player-host");
-			const form = document.getElementById("mutation-form");
-			const input = document.getElementById("mutation-input");
-			const runBtn = document.getElementById("run-btn");
-			const resetBtn = document.getElementById("reset-btn");
-			const message = document.getElementById("message");
+				if (
+					!playerHost ||
+					!form ||
+					!input ||
+					!runBtn ||
+					!resetBtn ||
+					!message
+				) {
+					return;
+				}
 
-			if (
-				playerHost &&
-				form &&
-				input &&
-				runBtn &&
-				resetBtn &&
-				message
-			) {
 				const player = new TwistyPlayer({
 					puzzle: "3x3x3",
 					alg: "",
@@ -106,7 +155,7 @@ import "../../styles/global.css";
 				// is what you see.
 				function resetToDefault() {
 					player.alg = new Alg();
-					player.experimentalSetupAlg = Alg.fromString(DEFAULT_SCRAMBLE);
+					player.experimentalSetupAlg = Alg.fromString(defaultScramble);
 					player.timestamp = "end";
 					input.value = "";
 					setMessage("Zum Ausgangszustand zurücksetzen");
@@ -180,6 +229,28 @@ import "../../styles/global.css";
 					attributeFilter: ["style"],
 				});
 			}
+
+			initExplorer({
+				playerHostId: "player-host",
+				formId: "mutation-form",
+				inputId: "mutation-input",
+				runBtnId: "run-btn",
+				resetBtnId: "reset-btn",
+				messageId: "message",
+				defaultScramble:
+					"U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 R' B U R'",
+			});
+
+			initExplorer({
+				playerHostId: "player-host-2",
+				formId: "mutation-form-2",
+				inputId: "mutation-input-2",
+				runBtnId: "run-btn-2",
+				resetBtnId: "reset-btn-2",
+				messageId: "message-2",
+				defaultScramble:
+					"U' F' R L D B' L' F U F L2 F2 R2 F' U2 L2 D2 L2 F B' y2 D' F",
+			});
 		</script>
 
 		<style>
@@ -197,12 +268,14 @@ import "../../styles/global.css";
 				background: light-dark(#ffffff, #202020);
 			}
 
-			#player-host {
+			#player-host,
+			#player-host-2 {
 				width: 100%;
 				height: 420px;
 			}
 
-			#player-host :global(twisty-player) {
+			#player-host :global(twisty-player),
+			#player-host-2 :global(twisty-player) {
 				width: 100%;
 				height: 100%;
 				--twisty-player-background: transparent;
@@ -285,7 +358,8 @@ import "../../styles/global.css";
 			}
 
 			@media (max-width: 720px) {
-				#player-host {
+				#player-host,
+				#player-host-2 {
 					height: 320px;
 				}
 			}
