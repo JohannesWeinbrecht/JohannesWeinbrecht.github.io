@@ -36,7 +36,8 @@ import "../../styles/global.css";
 				This page uses <a href="https://js.cubing.net/cubing/">cubing.js</a> to
 				render a <strong>3×3×3</strong> cube in a fixed default state (solved
 				cube, then the scramble shown below). Type a notation and hit
-				<strong>Run</strong> to apply it on top of the current state.
+				<strong>Run</strong> to apply it starting from that default state
+				(any previously run notation is replaced, nothing accumulates).
 				<strong>Reset</strong> restores the default state.
 			</p>
 
@@ -71,8 +72,9 @@ import "../../styles/global.css";
 					>
 					Use standard cube notation: <code>R U R' U'</code>,
 					<code>F2</code>, <code>M</code>, <code>Rw</code>, … Type a move
-					sequence and hit <strong>Run</strong> to apply it on top of the
-					current state. <strong>Reset</strong> restores the default state.
+					sequence and hit <strong>Run</strong> to apply it from the default
+					state — the previous run is replaced, so nothing is appended.
+					<strong>Reset</strong> restores the default state.
 				</p>
 			</div>
 		</main>
@@ -107,8 +109,6 @@ import "../../styles/global.css";
 				});
 				playerHost.appendChild(player);
 
-				let moveCount = 0;
-
 				function setMessage(text, kind = "info") {
 					message.textContent = text;
 					message.dataset.kind = kind;
@@ -122,7 +122,6 @@ import "../../styles/global.css";
 					player.experimentalSetupAlg = Alg.fromString(DEFAULT_SCRAMBLE);
 					player.timestamp = "end";
 					input.value = "";
-					moveCount = 0;
 					setMessage("Reset to the default state.");
 				}
 
@@ -149,19 +148,19 @@ import "../../styles/global.css";
 					}
 
 					try {
-						for (const move of moves) {
-							player.experimentalAddMove(move);
-						}
+						// Replace any previously applied moves: each Run starts
+						// over from the default state (solved + scramble) and
+						// applies exactly the notation in the field. Past Run
+						// contents are not kept, so nothing accumulates.
+						player.alg = alg;
+						player.timestamp = "end";
 					} catch (e) {
 						setMessage(`Could not apply “${raw}”: ${e.message}`, "error");
 						return;
 					}
 
-					moveCount += moves.length;
 					const plural = moves.length === 1 ? "" : "s";
-					setMessage(
-						`Applied ${moves.length} move${plural} (${raw}). Total moves applied: ${moveCount}.`,
-					);
+					setMessage(`Applied ${moves.length} move${plural} (${raw}).`);
 				}
 
 				form.addEventListener("submit", (e) => {
